@@ -4,6 +4,7 @@
 
 from urllib.request import urlopen
 from re import findall, MULTILINE
+from numpy import array
 
 # url for pdb file downloads
 PDBFTP = "http://pdbbeta.rcsb.org/pdb/files/"
@@ -31,7 +32,7 @@ def open_pdb_file(pdbfile):
 	Returns:
 	File object of the PDB file.
 	'''
-	return open(pdbfile, 'r') 
+	return open(pdbfile, 'rb') 
 
 def parse_pdb_file(pdbfile, handle='all', remark_handle='all'):
 	''' Parses a PDB file line-by-line, sending individual lines to dedicated parsers.
@@ -43,7 +44,7 @@ def parse_pdb_file(pdbfile, handle='all', remark_handle='all'):
 	Returns:
 	Map of PDB file.
 	'''
-	pdbdata = pdbfile.readlines()
+	pdbdata = [y for y in map(lambda x: str(x, 'ascii'), pdbfile.readlines())]
 	pdbfile.close()
 	# uses eval to evaluate specific records, using regexes to find said records if the records are in handle.
 	return {z: eval("handle_"+z.lower()+"_record("+str(findall(r'^'+z+r'.*\n', ''.join(pdbdata), MULTILINE))+(','+str(remark_handle) if z == 'REMARK' else '')+")") for z in {x[0:6].rstrip() for x in pdbdata} if z in handle or handle=='all'}
@@ -58,7 +59,7 @@ def handle_atom_record(records):
 	Returns:
 	A list of dictionaries of related information.
 	'''
-	return [{'record' : 'ATOM', 'serial' : int(x[6:11].rstrip()), 'name' : x[12:16].rstrip(), 'altloc' : x[16], 'res' : x[17:20], 'chain' : x[21], 'resseq' : int(x[22:26].rstrip()), 'icode' : x[26], 'coord' : (float(x[30:38].rstrip()), float(x[38:46].rstrip()), float(x[46:54].rstrip())), 'occupancy' : float(x[54:60].rstrip()), 'temp' : float(x[60:66].rstrip()), 'element' : x[76:78].lstrip(), 'charge' : x[78:80]} for x in records]
+	return [{'record' : 'ATOM', 'serial' : int(x[6:11].strip()), 'name' : x[12:16].strip(), 'altloc' : x[16], 'res' : x[17:20], 'chain' : x[21], 'resseq' : int(x[22:26].strip()), 'icode' : x[26], 'coord' : array([float(x[30:38].rstrip()), float(x[38:46].rstrip()), float(x[46:54].rstrip())]), 'occupancy' : float(x[54:60].rstrip()), 'temp' : float(x[60:66].rstrip()), 'element' : x[76:78].lstrip(), 'charge' : x[78:80]} for x in records]
 
 
 def handle_remark_record(records, remark_handle):
@@ -82,8 +83,8 @@ def handle_remark_465_record(records):
 	Returns:
 	List of missing residues and their numbers (tuple).
 	'''
-	return records
+	return [{'res' : x[15:18], 'chain' : x[19], 'resseq' : int(x[21:26].strip()), 'icode' : x[26]} for x in records[7:]]
 
 
 # test code below here
-print(parse_pdb_file(open_pdb_file('/home/asriniva/Downloads/3KXU.pdb'), ['REMARK'], [465]))
+#print(parse_pdb_file(download_pdb_file(sys.argv[1]), ['REMARK'], [465]))
