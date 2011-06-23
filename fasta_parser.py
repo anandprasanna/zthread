@@ -39,6 +39,6 @@ def parse_fasta_file(ffile):
 
 # test code below here
 
-print(parse_fasta_file(open_fasta_file("/home/asriniva/Downloads/hemoglobin.fasta.txt")))
+#print(parse_fasta_file(open_fasta_file("/home/asriniva/Downloads/hemoglobin.fasta.txt")))
 
 

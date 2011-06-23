@@ -61,6 +61,14 @@ def handle_atom_record(records):
 	"""
 	return [{'record' : 'ATOM', 'serial' : int(x[6:11].strip()), 'name' : x[12:16].strip(), 'altloc' : x[16], 'res' : x[17:20], 'chain' : x[21], 'resseq' : int(x[22:26].strip()), 'icode' : x[26], 'coord' : array([float(x[30:38].rstrip()), float(x[38:46].rstrip()), float(x[46:54].rstrip())]), 'occupancy' : float(x[54:60].rstrip()), 'temp' : float(x[60:66].rstrip()), 'element' : x[76:78].lstrip(), 'charge' : x[78:80]} for x in records]
 
+def handle_dbref_record(records):
+	""" Handles dbref records.
+
+	Arguments:
+	records -- The dbref record.
+	"""
+	return {'record' : 'DBREF', 'id' : records[0][7:11], 'chain' : records[0][12], 'seqbegin' : int(records[0][14:18].strip()), 'insertbegin' : records[0][18], 'seqend' : int(records[0][20:24].strip()), 'insertend' : records[0][24], 'database' : records[0][26:32].strip(), 'dbaccess' : records[0][33:41], 'dbid' : records[0][42:54], 'dbseqbegin' : int(records[0][55:60].strip()) , 'idbnsbegin' : records[0][60], 'dbseqend' : int(records[0][62:67].strip()), 'dbinsend' : records[0][67]}
+
 
 def handle_remark_record(records, remark_handle):
 	""" Handles remark records by passing them on to helper functions for individual remarks.
@@ -87,4 +95,4 @@ def handle_remark_465_record(records):
 
 
 # test code below here
-#print(parse_pdb_file(download_pdb_file(sys.argv[1]), ['REMARK'], [465]))
+#print(parse_pdb_file(download_pdb_file('3KXU'), ['REMARK', 'DBREF'], [465]))
