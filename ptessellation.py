@@ -2,7 +2,7 @@
 # Delaunay Tessellator
 # Written by Arjun Srinivasan
 
-from numpy import array
+from numpy import array,sum as arrsum
 from scipy.spatial import Delaunay
 from pdb_parser import parse_pdb_file, download_pdb_file, open_pdb_file
 
@@ -49,9 +49,9 @@ def simplex_potential(atomlist):
 	""" Calculates the potential of each simplex.
 
 	Arguments:
-	atomlist -- List of Delaunay triangulation vertices containing atom objects.
+	atomlist -- List of Delaunay triangulation vertices containing residues.
 	"""
-	return [(''.join([TOLC[y['res']] for y in x]), POTENTIAL_DICT[''.join(sorted([TOLC[y['res']] for y in x]))]) for x in atomlist]
+	return [(''.join([TOLC[y] for y in x]), POTENTIAL_DICT[''.join(sorted([TOLC[y] for y in x]))]) for x in atomlist]
 
 def residue_potential(atoms, vertices, simplexlist):
 	""" Calculates the potential of each residue (based on surrounding simplices)
@@ -63,11 +63,11 @@ def residue_potential(atoms, vertices, simplexlist):
 
 	FIXME: The listcomp is very slow and needs to be optimized.
 	"""
-	return [sum([z[1] for y,z in zip(vertices, simplexlist) if i in y]) for i,x in enumerate(atoms)]
+	return [arrsum(array([z[1] for y,z in zip(vertices, simplexlist) if i in y])) for i,x in enumerate(atoms)]
 
 # test code below here
-a = filter_target(parse_pdb_file(open_pdb_file('/home/asriniva/Downloads/3KXU.pdb'), ['ATOM', 'REMARK'], [465]), chain=['A'], name=['CA'])
-b = tessellate(a).vertices
-c = [[a[x] for x in y] for y in b]
-d = simplex_potential(c)
-[print(x['res'],y) for x,y in zip(a,residue_potential(a, b, d))]
+#a = filter_target(parse_pdb_file(open_pdb_file('/home/asriniva/Downloads/3KXU.pdb'), ['ATOM', 'REMARK'], [465]), chain=['A'], name=['CA'])
+#b = tessellate(a).vertices
+#c = [[a[x]['res'] for x in y] for y in b]
+#d = simplex_potential(c)
+#[print(x['resseq'],x['res'],y) for x,y in zip(a,residue_potential(a, b, d))]

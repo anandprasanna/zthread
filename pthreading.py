@@ -27,8 +27,8 @@ def trim_gaps(seq):
 	return [[y for i,y in enumerate(x) if seq[0][i] != '-'] for x in seq]
 
 # test code below here
-a = parse_pdb_file(open_pdb_file('/home/asriniva/Downloads/3KXU.pdb'), ['ATOM', 'DBREF', 'REMARK'], [465])
-a['ATOM'] = filter_target(a, name=['CA'])
-b = parse_fasta_file(open_fasta_file('/home/asriniva/Downloads/3KXU.fasta.txt'))
-print(b)
-print(thread_sequence(b[0][1], a))
+#a = parse_pdb_file(open_pdb_file('/home/asriniva/Downloads/3KXU.pdb'), ['ATOM', 'DBREF', 'REMARK'], [465])
+#a['ATOM'] = filter_target(a, name=['CA'])
+#b = parse_fasta_file(open_fasta_file('/home/asriniva/Downloads/3KXU.fasta.txt'))
+#print(b)
+#print(thread_sequence(b[0][1], a))
