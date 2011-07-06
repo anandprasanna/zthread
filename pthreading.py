@@ -2,6 +2,7 @@
 # Simple Protein Threader
 # Written by Arjun Srinivasan
 
+import sys
 from ptessellation import T3LC,filter_target
 from pdb_parser import open_pdb_file, parse_pdb_file
 #from fasta_parser import open_fasta_file, parse_fasta_file
@@ -26,9 +27,10 @@ def trim_gaps(seq):
 	"""
 	return [[y for i,y in enumerate(x) if seq[0][i] != '-'] for x in seq]
 
-# test code below here
-#a = parse_pdb_file(open_pdb_file('/home/asriniva/Downloads/3KXU.pdb'), ['ATOM', 'DBREF', 'REMARK'], [465])
-#a['ATOM'] = filter_target(a, name=['CA'])
-#b = parse_fasta_file(open_fasta_file('/home/asriniva/Downloads/3KXU.fasta.txt'))
-#print(b)
-#print(thread_sequence(b[0][1], a))
+# main code below here
+if __name__ == '__main__':
+	a = parse_pdb_file(open_pdb_file(sys.argv[1]), ['ATOM', 'DBREF', 'REMARK'], [465])
+	a['ATOM'] = filter_target(a, name=['CA'])
+	b = parse_fasta_file(open_fasta_file(sys.argv[2]))
+	print(b)
+	print(thread_sequence(b[0][1], a))

@@ -2,6 +2,7 @@
 # Delaunay Tessellator
 # Written by Arjun Srinivasan
 
+import sys
 from numpy import array,sum as arrsum,zeros
 from scipy.spatial import Delaunay
 from pdb_parser import parse_pdb_file, download_pdb_file, open_pdb_file
@@ -96,8 +97,9 @@ def find_optimal_span(atoms):
 	
 
 # test code below here
-#a = filter_target(parse_pdb_file(open_pdb_file('/home/asriniva/Downloads/3KXU.pdb'), ['ATOM', 'REMARK'], [465]), chain=['A'], name=['CA'])
-#b = tessellate(a).vertices
-#c = [[a[x]['res'] for x in y] for y in b]
-#d = simplex_potential(c)
-#[print(x['resseq'],x['res'],y) for x,y in zip(a,residue_potential(a, b, d))]
+if __name__ == '__main__':
+	a = filter_target(parse_pdb_file(open_pdb_file(sys.argv[1]), ['ATOM', 'REMARK'], [465]), chain=['A'], name=['CA'])
+	b = tessellate(a).vertices
+	c = [[a[x]['res'] for x in y] for y in b]
+	d = simplex_potential(c)
+	[print(x['resseq'],x['res'],y) for x,y in zip(a,residue_potential(a, b, d))]
