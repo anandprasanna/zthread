@@ -1,4 +1,4 @@
-#/usr/bin/env python3
+#/usr/bin/env python2
 # PDB Parser
 # Written by Arjun Srinivasan
 

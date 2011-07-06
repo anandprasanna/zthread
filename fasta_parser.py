@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # FASTA file parser
 # Written by Arjun Srinivasan
 
-from urllib.request import urlopen
-
+#from urllib.request import urlopen
+from urllib import urlopen
 
 UNIPROT_URL = "http://www.uniprot.org/uniprot/"
 
