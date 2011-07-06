@@ -1,0 +1,18 @@
+ZThread is a set of utilities written in Python to make use of four body potentials in 3D protein structures.
+
+The project has a custom PDB Parser to account for the subpar parser included in Biopython.
+
+Requirements:
+Python 2.6+
+Numpy 1.5+
+Scipy 0.9+
+Biopython 1.57+ (only for NCBI Entrez and sequence parsers, the current implementation includes a fasta parser that probably should be outdated [Biopython's sequence parsers are excellent.])
+
+Python 3.x support was included, but was removed due to incompatibilities.
+
+Current Features:
+- PDB parsing into a simple list of atoms
+- Delaunay tessellation of a set of atoms
+- Support for specific spans, chains, and atom names
+- Support for missing residues
+- Allows trimming of gaps in multiple sequence alignments
