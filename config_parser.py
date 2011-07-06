@@ -3,10 +3,14 @@
 # Written by Arjun Srinivasan
 
 from pdb_parser import *
-from fasta_parser import *
+# deprecated
+#from fasta_parser import *
 from ptessellation import *
 from pthreading import *
 from output_csv import *
+
+from Bio.AlignIO import *
+
 
 from os import mkdir
 import sys
@@ -19,10 +23,13 @@ if __name__ == '__main__':
 	else:
 		pdbfile = open_pdb_file(PDB_filename)
 	pdbdata = parse_pdb_file(pdbfile, records_parse, records_remarks_parse)
-	atoms = filter_target(pdbdata, name=atom_name, span=span, chain=chain)
+	atoms = filter_target(pdbdata['ATOM'], name=atom_name, span='all', chain=chain)
+	atoms = filter_target(atoms, name=atom_name, span=find_optimal_span(atoms), chain=chain)
 	verts = tessellate(atoms).vertices
 	sim_pot = simplex_potential([[atoms[x]['res'] for x in y] for y in verts]) 
 	res_pot = residue_potential(len(atoms), verts, sim_pot)
+#	for x,y,z in zip([i['resseq'] for i in atoms],[i['res'] for i in atoms], res_pot):
+#		print(x,y,z)
 	print(sum(res_pot))
 	if task_thread: 	
 		if FASTA_download:

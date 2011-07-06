@@ -4,7 +4,7 @@
 
 from ptessellation import T3LC,filter_target
 from pdb_parser import open_pdb_file, parse_pdb_file
-from fasta_parser import open_fasta_file, parse_fasta_file
+#from fasta_parser import open_fasta_file, parse_fasta_file
 
 def thread_sequence(seq, pdbstruct, replace=True):
 	""" Threads a protein sequence through a pdb structure. 

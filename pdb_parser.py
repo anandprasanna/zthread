@@ -2,7 +2,7 @@
 # PDB Parser
 # Written by Arjun Srinivasan
 
-from urllib.request import urlopen
+from urllib import urlopen
 from re import findall, MULTILINE
 from numpy import array
 
@@ -32,7 +32,7 @@ def open_pdb_file(pdbfile):
 	Returns:
 	File object of the PDB file.
 	"""
-	return open(pdbfile, 'rb') 
+	return open(pdbfile, 'r') 
 
 def parse_pdb_file(pdbfile, handle='all', remark_handle='all'):
 	""" Parses a PDB file line-by-line, sending individual lines to dedicated parsers.
@@ -44,7 +44,7 @@ def parse_pdb_file(pdbfile, handle='all', remark_handle='all'):
 	Returns:
 	Map of PDB file.
 	"""
-	pdbdata = [y for y in map(lambda x: str(x, 'ascii'), pdbfile.readlines())]
+	pdbdata = [y for y in map(lambda x: str(x), pdbfile.readlines())]
 	pdbfile.close()
 	# uses eval to evaluate specific records, using regexes to find said records if the records are in handle.
 	return {z: eval("handle_"+z.lower()+"_record("+str(findall(r'^'+z+r'.*\n', ''.join(pdbdata), MULTILINE))+(','+str(remark_handle) if z == 'REMARK' else '')+")") for z in {x[0:6].rstrip() for x in pdbdata} if z in handle or handle=='all'}

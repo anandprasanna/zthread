@@ -18,20 +18,19 @@ def generate_potential_dictionary():
 
 POTENTIAL_DICT = generate_potential_dictionary()
 
-def filter_target(pdbstruct, name='all', span='all', chain='all'):
+def filter_target(atoms, name='all', span='all', chain='all',altloc='A'):
 	""" Filters a protein structure based on given information.
 	
 	Arguments:
-	pdbstruct -- A dictionary pdb structure as created by the parser.
+	atoms -- A list of atom records as created by the parser.
 	name -- A list of atom types to handle. For example, CA.
 	span -- Resseq values that are accepted. Values are entered as arguments to range.
 	chain -- Chains to parse.
-	"""
-	# Warnings for missing residues:
-	if 'REMARK' in pdbstruct and 465 in pdbstruct['REMARK']:
-		print("The following residues are missing (residue, chain, resseq, icode): "+str(pdbstruct['REMARK'][465]))
 
-	return [x for x in pdbstruct['ATOM'] if (span == 'all' or x['resseq'] in span) and (name == 'all' or x['name'] in name) and (chain == 'all' or x['chain'] in chain)]
+	FIXME: need to fix find_optimal_span and its usage with filter_target
+	"""
+
+	return [x for x in atoms if (span == 'all' or x['resseq'] in span) and (name == 'all' or x['name'] in name) and (chain == 'all' or x['chain'] in chain) and (x['altloc']== ' ' or x['altloc'] == altloc) ]
 
 
 def tessellate(atoms):
@@ -68,6 +67,33 @@ def residue_potential(num_atoms, vertices, simplexlist):
 		for e in x:
 			res_pots[e] += y[1]
 	return res_pots
+
+def find_optimal_span(atoms):
+	""" Finds the optimal region of the pdb structure, without gaps.
+
+	Arguments:
+	pdbstruct -- PDB structure 'object' as created by the parser.
+	"""
+	# Warnings for missing residues:
+#	if 'REMARK' in pdbstruct and 465 in pdbstruct['REMARK']:
+#		print("The following residues are missing (residue, chain, resseq, icode): "+str(pdbstruct['REMARK'][465]))
+	end_index, max_l = 0,0
+	cur_l = 0
+	res_seq_numbers = sorted([x['resseq'] for x in atoms])
+	for x,y in zip(res_seq_numbers[:-1],res_seq_numbers[1:]):
+		if y-x == 1:
+			cur_l+=1
+		else:
+			if max_l < cur_l+1:
+				max_l = cur_l+1
+				end_index = x
+	if max_l < cur_l+2:
+		max_l = cur_l+2
+		end_index = res_seq_numbers[-1]
+	return res_seq_numbers[end_index-max_l:end_index]
+
+
+	
 
 # test code below here
 #a = filter_target(parse_pdb_file(open_pdb_file('/home/asriniva/Downloads/3KXU.pdb'), ['ATOM', 'REMARK'], [465]), chain=['A'], name=['CA'])
