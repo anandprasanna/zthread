@@ -1,0 +1,15 @@
+To help alleviate some confusion about the different structural constructs used throughout the tools, here are a few helpful pointers:
+
+pdbstruct -- Refers to the full PDB structure in a record-based format. The included PDB Parser organizes the structure using records instead of focusing on structure. This is a design decision due to the general inflexibility of that design. If you would like to access specific parameters in a hierarchy, it is rather difficult; however, with the current design, all that is needed is a call to filter_target, or a general purpose-filter using a list comprehension.
+
+atoms -- ptessellation makes a major use of atoms, which is pdbstruct['ATOM']. This gives every atom record from the pdb file, and includes information on coordinates, residues, etc.
+
+residues -- pprofile will be restructured to use this. This will be a list of residues, generated through SEQRES and ATOM records and filtered through filter_target.
+
+atomlist -- list of atom records placed in groups of four, generated through tessellation.
+
+vertices -- A zero-indexed list of vertices, as generated through tessellation.
+
+simplexlist -- Tuples of (simplexresidues, simplexpotential) for every simplex.
+
+All of the above is subject to change, but generally should retain this format.
