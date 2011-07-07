@@ -27,6 +27,7 @@ def filter_target(atoms, name='all', span='all', chain='all',altloc='A'):
 	name -- A list of atom types to handle. For example, CA.
 	span -- Resseq values that are accepted. Values are entered as arguments to range.
 	chain -- Chains to parse.
+	altloc -- Specify alternate location to use when faced with a choice.
 
 	FIXME: need to fix find_optimal_span and its usage with filter_target
 	"""

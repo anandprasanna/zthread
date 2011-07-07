@@ -2,6 +2,8 @@
 # PDB Parser
 # Written by Arjun Srinivasan
 
+import sys
+
 from urllib import urlopen
 from re import findall, MULTILINE
 from numpy import array
