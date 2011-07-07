@@ -95,4 +95,4 @@ def handle_remark_465_record(records):
 
 
 # test code below here
-#print(parse_pdb_file(open_pdb_file('/home/asriniva/Downloads/3KXU.pdb'), ['ATOM','REMARK', 'DBREF'], [465]))
+print(parse_pdb_file(open_pdb_file(sys.argv[1]), ['ATOM','REMARK', 'DBREF'], [465]))
