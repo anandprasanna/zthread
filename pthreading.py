@@ -3,7 +3,8 @@
 # Written by Arjun Srinivasan
 
 import sys
-from ptessellation import T3LC,filter_target
+from ptessellation import filter_target
+from pprofile import T3LC
 from pdb_parser import open_pdb_file, parse_pdb_file
 #from fasta_parser import open_fasta_file, parse_fasta_file
 

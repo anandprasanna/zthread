@@ -6,10 +6,11 @@ from pdb_parser import *
 # deprecated
 #from fasta_parser import *
 from ptessellation import *
+from pprofile import *
 from pthreading import *
 from output_csv import *
 
-from Bio.AlignIO import *
+from Bio import AlignIO
 from Bio.Entrez import efetch
 
 from os import mkdir
