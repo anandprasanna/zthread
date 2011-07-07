@@ -23,8 +23,12 @@ if __name__ == '__main__':
 	else:
 		pdbfile = open_pdb_file(PDB_filename)
 	pdbdata = parse_pdb_file(pdbfile, records_parse, records_remarks_parse)
-	atoms = filter_target(pdbdata['ATOM'], name=atom_name, span='all', chain=chain)
-	atoms = filter_target(atoms, name=atom_name, span=find_optimal_span(atoms), chain=chain)
+
+	#filter the atoms by name, then find optimal span, if necessary
+	atoms = filter_target(pdbdata['ATOM'], name=atom_name, span=span, chain=chain)
+	if optimal_span:
+		atoms = filter_target(atoms, name=atom_name, span=find_optimal_span(atoms), chain=chain)
+
 	verts = tessellate(atoms).vertices
 	sim_pot = simplex_potential([[atoms[x]['res'] for x in y] for y in verts]) 
 	res_pot = residue_potential(len(atoms), verts, sim_pot)

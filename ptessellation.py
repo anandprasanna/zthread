@@ -74,7 +74,10 @@ def find_optimal_span(atoms):
 	""" Finds the optimal region of the pdb structure, without gaps.
 
 	Arguments:
-	pdbstruct -- PDB structure 'object' as created by the parser.
+	atoms -- List of atoms from the pdb structure.
+
+	Returns:
+	List of residue numbers of the optimal span.
 	"""
 	# Warnings for missing residues:
 #	if 'REMARK' in pdbstruct and 465 in pdbstruct['REMARK']:
@@ -92,7 +95,7 @@ def find_optimal_span(atoms):
 	if max_l < cur_l+2:
 		max_l = cur_l+2
 		end_index = res_seq_numbers[-1]
-	return res_seq_numbers[end_index-max_l:end_index]
+	return res_seq_numbers[end_index-max_l:end_index] 
 
 
 	

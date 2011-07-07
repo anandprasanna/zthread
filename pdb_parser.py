@@ -97,4 +97,5 @@ def handle_remark_465_record(records):
 
 
 # test code below here
-print(parse_pdb_file(open_pdb_file(sys.argv[1]), ['ATOM','REMARK', 'DBREF'], [465]))
+if __name__ == '__main__':
+	print(parse_pdb_file(open_pdb_file(sys.argv[1]), ['ATOM','REMARK', 'DBREF'], [465]))
