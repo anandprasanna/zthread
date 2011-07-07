@@ -103,4 +103,5 @@ if __name__ == '__main__':
 	b = tessellate(a).vertices
 	c = [[a[x]['res'] for x in y] for y in b]
 	d = simplex_potential(c)
-	[print(x['resseq'],x['res'],y) for x,y in zip(a,residue_potential(a, b, d))]
+#	[print(x['resseq'],x['res'],y) for x,y in zip(a,residue_potential(a, b, d))]
+
