@@ -10,7 +10,7 @@ from pthreading import *
 from output_csv import *
 
 from Bio.AlignIO import *
-
+from Bio.Entrez import efetch
 
 from os import mkdir
 import sys
@@ -26,32 +26,36 @@ if __name__ == '__main__':
         pdbfile = open_pdb_file(PDB_filename)
     pdbdata = parse_pdb_file(pdbfile, records_parse, records_remarks_parse)
 
-    # Filter the atoms by name, then find optimal span, if necessary
-    atoms = filter_target(pdbdata['ATOM'], name=atom_name, span=span, chain=chain)
-    if optimal_span:
-        atoms = filter_target(atoms, name=atom_name, span=find_optimal_span(atoms), chain=chain)
+    if task_tessellate or task_profile or task_threading:
+        # Filter the atoms by name, then find optimal span, if necessary
+        atoms = filter_target(pdbdata['ATOM'], name=atom_name, span=span, chain=chain)
+        if optimal_span:
+            atoms = filter_target(atoms, name=atom_name, span=find_optimal_span(atoms), chain=chain)
 
-    # Tessellate protein
-    verts = tessellate(atoms).vertices
+        # Tessellate protein
+        verts = tessellate(atoms).vertices
 
-    # Calculate potentials
-    orig_sim_pot = simplex_potential([[atoms[x]['res'] for x in y] for y in verts]) 
-    orig_res_pot = residue_potential(len(atoms), verts, orig_sim_pot)
+    if task_profile or task_threading:
+        # Calculate potentials
+        orig_sim_pot = simplex_potential([[atoms[x]['res'] for x in y] for y in verts]) 
+        orig_res_pot = residue_potential(len(atoms), verts, orig_sim_pot)
+
 #	for x,y,z in zip([i['resseq'] for i in atoms],[i['res'] for i in atoms], res_pot):
 #		print(x,y,z)
-    print(sum(res_pot))
+
+    print(sum(orig_res_pot))
+    
     if task_thread: 	
-        if FASTA_download:
-            ffile = download_fasta_file(FASTA_id, FASTA_database)
+        if seq_download:
+            seqfile = efetch(db="protein", id=seq_id, rettype=seq_format)
         else:
-            ffile = open_fasta_file(FASTA_filename)
-        seq = [x[1] for x in parse_fasta_file(ffile)]
-        seq = trim_gaps(seq)
+            seqfile = seq_filename
+        seq = trim_gaps([x.seq for x in AlignIO.read(seqfile,seq_format)])
         for z in seq[1:]:
             residues = thread_sequence(z, pdbdata)
-            simd = simplex_potential([[residues[x] for x in y] for y in verts]) 
-            resd = residue_potential(atoms, verts, simd)
-            deltaq = array(resd)-array(res_pot)
+            mut_sim_pot = simplex_potential([[residues[x] for x in y] for y in verts]) 
+            mut_res_pot = residue_potential(atoms, verts, mut_sim_pot)
+            deltaq = array(mut_res_pot)-array(orig_res_pot)
             if output_csv:
                 mkdir(data_dir+task_name)
                 csvfile = open_csv_file(data_dir+task_name+"/output.csv")
