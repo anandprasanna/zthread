@@ -4,9 +4,7 @@ pdbstruct -- Refers to the full PDB structure in a record-based format. The incl
 
 atoms -- ptessellation makes a major use of atoms, which is pdbstruct['ATOM']. This gives every atom record from the pdb file, and includes information on coordinates, residues, etc.
 
-residues -- pprofile will be restructured to use this. This will be a list of residues, generated through SEQRES and ATOM records and filtered through filter_target.
-
-atomlist -- list of atom records placed in groups of four, generated through tessellation.
+reslist -- list of residues placed in groups of four, generated through tessellation.
 
 vertices -- A zero-indexed list of vertices, as generated through tessellation.
 
