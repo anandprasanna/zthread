@@ -8,25 +8,32 @@ from pprofile import T3LC
 from pdb_parser import open_pdb_file, parse_pdb_file
 #from fasta_parser import open_fasta_file, parse_fasta_file
 
-def thread_sequence(seq, pdbstruct, replace=True):
+def thread_sequence(mut_seq, orig_seq, orig_seq_begin, span='all', replace=True):
     """ Threads a protein sequence through a pdb structure. 
 
     Arguments:
-    seq -- Sequence to be threaded.
-    pdbstruct -- Template structure.
-    replace -- Not used yet, but will flag the option to replace all gaps in sequences with residues from the original template structure.
+    mut_seq -- Sequence to be threaded.
+    orig_seq -- Primary sequence, to be used for replacement.
+    orig_seq_begin -- Starting number for PDB numbering.
+    span -- Range of residues to use.
+    replace -- Flags the option to replace all gaps in sequences with residues from the original template structure.
     """
-    # The -1 is because resseq begins numbering at 1, while indexing in Python begins at 0
-    return [T3LC[seq[x['resseq'] - 1 - (pdbstruct['DBREF']['seqbegin']-pdbstruct['DBREF']['dbseqbegin'])]] for x in pdbstruct["ATOM"] if seq[x['resseq'] - (pdbstruct['DBREF']['seqbegin']-pdbstruct['DBREF']['dbseqbegin'])] != '-' ]
+    return [T3LC[x] if (not replace or x!=['-']) else T3LC[orig_seq[i]] for i,x in enumerate(mut_seq) if span=='all' or i+orig_seq_begin in span]
 
 
-def trim_gaps(seq):
+def trim_gaps(mut_seq, orig_seq, seq_numbers):
     """ Trims gaps of the primary sequence.
 
     Arguments:
-    seq -- List of sequences. Assumes first element is the primary sequence.
+    mut_seq -- Sequence to be trimmed. 
+    orig_seq -- Primary sequence to be trimmed of gaps.
+    seq_numbers -- Numbering for the sequence.
+    
+    Returns:
+    List of sequence numbers and the sequence itself, both trimmed.
     """
-    return [[y for i,y in enumerate(x) if seq[0][i] != '-'] for x in seq]
+    return zip(*[(i,y) for i,x,y in zip(seq_numbers, orig_seq, mut_seq) if x != '-'])
+
 
 # main code below here
 if __name__ == '__main__':
