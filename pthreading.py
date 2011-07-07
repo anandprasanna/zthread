@@ -6,6 +6,8 @@ import sys
 from ptessellation import filter_target
 from pprofile import T3LC
 from pdb_parser import open_pdb_file, parse_pdb_file
+
+from numpy import array
 #from fasta_parser import open_fasta_file, parse_fasta_file
 
 def thread_sequence(mut_seq, orig_seq, orig_seq_begin, span='all', replace=True):
@@ -34,6 +36,24 @@ def trim_gaps(mut_seq, orig_seq, seq_numbers):
     """
     return zip(*[(i,y) for i,x,y in zip(seq_numbers, orig_seq, mut_seq) if x != '-'])
 
+def number_sequence(seq):
+    """ Numbers a sequence (as in, doesn't number the gaps).
+
+    Arguments:
+    seq -- Sequence to be numbered.
+
+    Returns:
+    List of numbers corresponding to each index of the MSA.
+    """
+    numbers = []
+    count = 1
+    for x in seq:
+        if x != '-':
+            numbers+=[count]
+            count+=1
+        else:
+            numbers+=['-']
+    return numbers
 
 # main code below here
 if __name__ == '__main__':
