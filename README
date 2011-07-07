@@ -16,3 +16,4 @@ Current Features:
 - Support for specific spans, chains, and atom names
 - Support for missing residues
 - Allows trimming of gaps in multiple sequence alignments
+- Threading of sequences through template structure
