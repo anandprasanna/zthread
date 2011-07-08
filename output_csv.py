@@ -25,4 +25,4 @@ def write_residue_potential():
 
 def write_threading_output(writer, wild_numbers, wild_residues, wild_potentials, mut_numbers, mut_residues, mut_potentials):
     """ Writes output from threading."""
-    for u,v,w,x,y,z in zip(wild_numbers, wild_residues, wild_potentials, mut_numbers, mut_residues, mut_potentials): writer.writerow(u,v,w,x,y,z)
+    for u,v,w,x,y,z in zip(wild_numbers, wild_residues, wild_potentials, mut_numbers, mut_residues, mut_potentials): writer.writerow([u,v,w,x,y,z])

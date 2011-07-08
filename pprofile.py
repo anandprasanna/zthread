@@ -16,13 +16,13 @@ def generate_potential_dictionary():
 
 POTENTIAL_DICT = generate_potential_dictionary()
 
-def simplex_potential(atomlist):
+def simplex_potential(reslist):
     """ Calculates the potential of each simplex.
 
     Arguments:
-    atomlist -- List of Delaunay triangulation vertices containing residues.
+    reslist -- List of Delaunay triangulation vertices containing residues.
     """
-    res_strings = [''.join([TOLC[y] for y in x]) for x in atomlist]
+    res_strings = [''.join([TOLC[y] for y in x]) for x in reslist]
     return [(x, POTENTIAL_DICT[''.join(sorted(x))]) for x in res_strings]
 
 def residue_potential(num_atoms, vertices, simplexlist):

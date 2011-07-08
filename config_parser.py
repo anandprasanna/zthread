@@ -51,14 +51,14 @@ if __name__ == '__main__':
             seqfile = efetch(db="protein", id=seq_id, rettype=seq_format)
         else:
             seqfile = seq_filename
-        seq = trim_gaps([x.seq for x in AlignIO.read(seqfile,seq_format)])
-        for z in seq[1:]:
-            residues = thread_sequence(z, pdbdata)
+        seq = [x.seq for x in AlignIO.read(seqfile,seq_format)]
+        trimmed_nums, trimmed_seq = zip(*[trim_gaps(x,seq[0], number_sequence(x)) for x in seq[1:]])
+        for z,i in zip(trimmed_seq[1:], trimmed_nums[1:]):
+            res_numbers,residues = thread_sequence(z, seq[0], pdbdata['DBREF']['seqbegin'], i, span)
             mut_sim_pot = simplex_potential([[residues[x] for x in y] for y in verts]) 
-            mut_res_pot = residue_potential(atoms, verts, mut_sim_pot)
+            mut_res_pot = residue_potential(len(atoms), verts, mut_sim_pot)
             deltaq = array(mut_res_pot)-array(orig_res_pot)
             if output_csv:
-                mkdir(data_dir+task_name)
                 csvfile = open_csv_file(data_dir+task_name+"/output.csv")
-#				write_threading_output(csvfile, 
+                write_threading_output(csvfile, span, [x['res'] for x in atoms], orig_res_pot, res_numbers, residues, mut_res_pot)
 
