@@ -41,9 +41,6 @@ if __name__ == '__main__':
         orig_sim_pot = simplex_potential([[atoms[x]['res'] for x in y] for y in verts]) 
         orig_res_pot = residue_potential(len(atoms), verts, orig_sim_pot)
 
-#	for x,y,z in zip([i['resseq'] for i in atoms],[i['res'] for i in atoms], res_pot):
-#		print(x,y,z)
-
     if task_thread: 	
         if seq_download:
             seqfile = efetch(db="protein", id=seq_id, rettype=seq_format)
