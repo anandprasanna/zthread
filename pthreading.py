@@ -20,7 +20,7 @@ def thread_sequence(mut_seq, orig_seq, orig_seq_begin, seq_numbers, span='all', 
     span -- Range of residues to use.
     replace -- Flags the option to replace all gaps in sequences with residues from the original template structure.
     """
-    return zip(*[(j, T3LC[x] if (not replace or x!=['-']) else T3LC[orig_seq[i]]) for i,x,j in zip(range(len(mut_seq)), mut_seq,seq_numbers) if span=='all' or i+orig_seq_begin in span])
+    return zip(*[(j, T3LC[x] if (not replace or x!='-' or x!='X') else T3LC[orig_seq[i]]) for i,x,j in zip(range(len(mut_seq)), mut_seq,seq_numbers) if span=='all' or i+orig_seq_begin in span])
 
 
 def trim_gaps(mut_seq, orig_seq, seq_numbers):
