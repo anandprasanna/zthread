@@ -20,7 +20,7 @@ def filter_target(atoms, name='all', span='all', chain='all',altloc='A'):
     FIXME: need to fix find_optimal_span and its usage with filter_target
     """
 
-    return [x for x in atoms if (span == 'all' or x['resseq'] in span) and (name == 'all' or x['name'] in name) and (chain == 'all' or x['chain'] in chain) and (x['altloc']== ' ' or x['altloc'] == altloc) ]
+    return [x for x in atoms if (span == 'all' or x['resseq'] in span) and (name == 'all' or x['name'] in name) and (chain == 'all' or x['chain'] in chain) and (x['altloc']== ' ' or x['altloc'] == altloc) and x['icode'] == ' ' ]
 
 
 def tessellate(atoms):
@@ -56,10 +56,11 @@ def find_optimal_span(atoms):
         else:
             if max_l < cur_l+1:
                 max_l = cur_l+1
-                end_index = x
-    if max_l < cur_l+2:
-        max_l = cur_l+2
-        end_index = res_seq_numbers[-1]
+                end_index = y 
+            cur_l = 0
+    if max_l < cur_l+1:
+        max_l = cur_l+1
+        end_index = len(res_seq_numbers)
     return res_seq_numbers[end_index-max_l:end_index] 
 
 

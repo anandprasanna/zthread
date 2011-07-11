@@ -47,9 +47,9 @@ if __name__ == '__main__':
         else:
             seqfile = seq_filename
         ids,seq = zip(*[(x.id, x.seq) for x in AlignIO.read(seqfile,seq_format)])
-        trimmed_nums, trimmed_seq = zip(*[trim_gaps(x,seq[0], number_sequence(x)) for x in seq[1:]])
-        for z,i,d in zip(trimmed_seq, trimmed_nums, ids):
-            res_numbers,residues = thread_sequence(z, seq[0], pdbdata['DBREF']['seqbegin'], i, span)
+        trimmed_nums, trimmed_seq = zip(*[trim_gaps(x,seq[0], number_sequence(x)) for x in seq])
+        for z,i,d in zip(trimmed_seq[1:], trimmed_nums[1:], ids[1:]):
+            res_numbers,residues = thread_sequence(z, trimmed_seq[0], pdbdata['DBREF']['seqbegin'], i, span)
             mut_sim_pot = simplex_potential([[residues[x] for x in y] for y in verts]) 
             mut_res_pot = residue_potential(len(atoms), verts, mut_sim_pot)
             deltaq = array(mut_res_pot)-array(orig_res_pot)

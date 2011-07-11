@@ -5,9 +5,10 @@
 from numpy import zeros
 
 POTENTIAL_DICT_FILE = "potential_1417.out"
-TO_ONE_LETTER_CODE={'ALA':'A', 'VAL':'V', 'PHE':'F', 'PRO':'P', 'MET':'M','ILE':'I', 'LEU':'L', 'ASP':'D', 'GLU':'E', 'LYS':'K','ARG':'R', 'SER':'S', 'THR':'T', 'TYR':'Y', 'HIS':'H','CYS':'C', 'ASN':'N', 'GLN':'Q', 'TRP':'W', 'GLY':'G'}
+TO_ONE_LETTER_CODE={'ALA':'A', 'VAL':'V', 'PHE':'F', 'PRO':'P', 'MET':'M','ILE':'I', 'LEU':'L', 'ASP':'D', 'GLU':'E', 'LYS':'K','ARG':'R', 'SER':'S', 'THR':'T', 'TYR':'Y', 'HIS':'H','CYS':'C', 'ASN':'N', 'GLN':'Q', 'TRP':'W', 'GLY':'G', '---':'-', 'XXX':'X'}
 TOLC = TO_ONE_LETTER_CODE
 T3LC = {y:x for x,y in TOLC.items()}
+T3LC["B"] = "ASP"
 
 def generate_potential_dictionary():
     """ Generate the potential dictionary for four-body potentials based on previous data. """
