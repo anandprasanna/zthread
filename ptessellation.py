@@ -63,23 +63,55 @@ def find_optimal_span(atoms):
         max_l = cur_l+1
         end_index = len(res_seq_numbers)
     return res_seq_numbers[end_index-max_l:end_index]
-def make_matrix(pdbid,chainid): #makes a matrix given the pdb id and cahin id for now after removing simplicies i do not update data ,i assume that its very unlikly that a residue will have no simplcies with lengths less than 10 a
+
+
+
+
+def make_matrix(pdbid,chainid):
+    matrixlist = []
+    makelist = make_matrixlist(pdbid,chainid)
+    proxlist = makelist[0]
+    simplexlist =  makelist[1]
+    for res in proxlist:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def make_prematrixlist(pdbid,chainid): #makes a matrix given the pdb id and cahin id for now after removing simplicies i do not update data ,i assume that its very unlikly that a residue will have no simplcies with lengths less than 10 a
     pdbstruct = (parse_pdb_file(download_pdb_file(pdbid),['ATOM'],[] ))
     a = filter_target(pdbstruct['ATOM'], name = ['CA'], chain = [chainid])
     a = filter_target(a, name = ['CA'], span=find_optimal_span(a))
     simplexlist = [[ (a[x]['resseq'], a[x]['res'], a[x]['coord'] ) for x in y] for y in tessellate(a).vertices]#gives grouping in terms of four(one simplex)
     data = ([(x['resseq'],x['res']) for x in a])
     simplexlist = filter_simplicies(10,simplexlist)#integer sets cutoff
-    proxlist = neighborlist(data,simplexlist)
-    return proxlist
+    return (neighborlist(data,simplexlist),simplexlist)
 
-def neighborlist(reslist,simplexlist):#returns list of neighbors(in set form for each residue in terms of indicies
+
+def neighborlist(reslist,simplexlist):#returns list of neighbors(in set form for each residue in terms of indicies in simnplexlist
     globallist = [None]*(reslist[-1][0]+10)
     for item in reslist:
         globallist[item[0]] = addsecshell(getshells(item[0],simplexlist),simplexlist)
     return globallist
 
-def addsecshell(shell1,simplexlist):#adds second shell
+def addsecshell(shell1,simplexlist):#adds second shell thorugh update
     secshell= shell1.copy()
     for simplex in shell1.copy():
         sechell = secshell.update(getshells(simplex,simplexlist))
@@ -113,7 +145,8 @@ def filter_simplicies(cutoff,simplexlist):
 def calc_dist(coord1,coord2,cutoff):
     return True if math.sqrt((coord1[0]-coord2[0])**2 + (coord1[1]-coord2[1])**2 + (coord1[2]-coord2[2])**2)<cutoff else False
 
-#def transform():
+#def transform(coordlist):
+   # if c
 
 
 
