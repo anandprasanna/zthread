@@ -67,20 +67,15 @@ def find_optimal_span(atoms):
 
 
 
-def make_matrix(pdbid,chainid):
-    matrixlist = []
-    makelist = make_matrixlist(pdbid,chainid)
+def make_matricies(pdbid,chainid):#makes topology matrix for every ittem in each set
+    matrixlist = {}
+    makelist = make_prematrixlist(pdbid,chainid)
     proxlist = makelist[0]
     simplexlist =  makelist[1]
-    for res in proxlist:
-
-
-
-
-
-
-
-
+    for index, set in enumerate(proxlist):
+        if(set != None):
+            matrixlist[index] = convset(set,simplexlist)
+    return matrixlist
 
 
 
@@ -145,8 +140,31 @@ def filter_simplicies(cutoff,simplexlist):
 def calc_dist(coord1,coord2,cutoff):
     return True if math.sqrt((coord1[0]-coord2[0])**2 + (coord1[1]-coord2[1])**2 + (coord1[2]-coord2[2])**2)<cutoff else False
 
-#def transform(coordlist):
-   # if c
+def convset(set,simplexlist):
+  #  fourlist = [[0]*4,[0]*4,[0]*4,[0]*4]
+    #topmatrix = [fourlist,fourlist,fourlist,fourlist]
+    topmatrix = [[ [ 0 for i in range(4) ] for j in range(4) ] for k in range(4)]
+    for index in set:
+        coordlist = applyt(index,simplexlist)
+        topmatrix[coordlist[0]][coordlist[1]][coordlist[2]] +=1
+    return topmatrix
+
+
+def applyt(index,simplexlist):
+    reslist = sorted([simplexlist[index][0][0],simplexlist[index][1][0],simplexlist[index][2][0],simplexlist[index][3][0]])
+    reslist = [reslist[1]-reslist[0]-1,reslist[2]-reslist[1]-1,reslist[3]-reslist[2]-1]
+    for x, item in enumerate(reslist[:]):
+        if(item<=1):
+            reslist[x] = 0
+        elif (2 <= item <=4):
+            reslist[x] = 1
+        elif (5 <= item <=10):
+            reslist[x] = 2
+        elif (item > 10):
+            reslist[x] = 3
+    return reslist
+
+
 
 
 
