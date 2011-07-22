@@ -70,12 +70,12 @@ def find_optimal_span(atoms):
 def make_matricies(pdbid,chainid):#makes topology matrix for every ittem in each set
     matrixlist = {}
     makelist = make_prematrixlist(pdbid,chainid)
-    proxlist = makelist[0]
+    proxlist = makelist[0][0]
     simplexlist =  makelist[1]
     for index, set in enumerate(proxlist):
         if(set != None):
             matrixlist[index] = convset(set,simplexlist)
-    return (matrixlist,makelist[2])
+    return (matrixlist,makelist[2],makelist[0][1])
 
 
 
@@ -102,9 +102,13 @@ def make_prematrixlist(pdbid,chainid): #makes a matrix given the pdb id and cahi
 
 def neighborlist(reslist,simplexlist):#returns list of neighbors(in set form for each residue in terms of indicies in simnplexlist
     globallist = [None]*(reslist[-1][0]+10)
+    reslistdict = dict(reslist)
+    hydroscoreprotdict = {}
     for item in reslist:
-        globallist[item[0]] = addsecshell(getshells(item[0],simplexlist),simplexlist)
-    return globallist
+        tempfrst = getshells(item[0],simplexlist)
+        hydroscoreprotdict[item[0]] = get_hydrophobicity_score(tempfrst,simplexlist,reslistdict )
+        globallist[item[0]] = (addsecshell(tempfrst,simplexlist))
+    return (globallist,hydroscoreprotdict)
 
 def addsecshell(shell1,simplexlist):#adds second shell thorugh update
     secshell= shell1.copy()
@@ -164,12 +168,17 @@ def applyt(index,simplexlist):
             reslist[x] = 3
     return reslist
 
+def get_hydrophobicity_score(firstshell,simplexlist,res2name):
+#using Cornette scale:
+    firstshellresidues = Set()
 
-
-
-
-# test code below here
-#if __name__ == '__main__':
-
-#	[print(x['resseq'],x['res'],y) for x,y in zip(a,residue_potential(a, b, d))]
-
+    hydrodict = {'GLY': 0.00,'ALA':0.20, 'VAL': 4.70 ,'LEU': 5.70,'ILE':4.80 ,'MET': 4.20 ,'PHE': 4.40 , 'TRP': 1.00 , 'PRO': -2.20, 'SER':-0.50 ,'THR':-1.90 , 'CYS': 4.10, 'TYR': 3.20 ,'ASN': -0.50, 'GLN': -2.80, 'ASP': -3.10, 'GLU': -1.80 ,'LYS': -3.10, 'ARG': 1.40, 'HIS': 0.50 }
+    for simplexindex in firstshell:
+        firstshellresidues.add(simplexlist[simplexindex][0][0])
+        firstshellresidues.add(simplexlist[simplexindex][1][0])
+        firstshellresidues.add(simplexlist[simplexindex][2][0])
+        firstshellresidues.add(simplexlist[simplexindex][3][0])
+    score = 0
+    for index in firstshellresidues:
+        score += hydrodict[res2name[index]]
+    return score
