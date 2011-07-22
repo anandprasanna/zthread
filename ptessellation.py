@@ -75,7 +75,7 @@ def make_matricies(pdbid,chainid):#makes topology matrix for every ittem in each
     for index, set in enumerate(proxlist):
         if(set != None):
             matrixlist[index] = convset(set,simplexlist)
-    return matrixlist
+    return (matrixlist,makelist[2])
 
 
 
@@ -97,7 +97,7 @@ def make_prematrixlist(pdbid,chainid): #makes a matrix given the pdb id and cahi
     simplexlist = [[ (a[x]['resseq'], a[x]['res'], a[x]['coord'] ) for x in y] for y in tessellate(a).vertices]#gives grouping in terms of four(one simplex)
     data = ([(x['resseq'],x['res']) for x in a])
     simplexlist = filter_simplicies(10,simplexlist)#integer sets cutoff
-    return (neighborlist(data,simplexlist),simplexlist)
+    return (neighborlist(data,simplexlist),simplexlist,dict(data))
 
 
 def neighborlist(reslist,simplexlist):#returns list of neighbors(in set form for each residue in terms of indicies in simnplexlist
@@ -170,9 +170,6 @@ def applyt(index,simplexlist):
 
 # test code below here
 #if __name__ == '__main__':
-    a = filter_target(parse_pdb_file(open_pdb_file(sys.argv[1]), ['ATOM', 'REMARK'], [465]), chain=['A'], name=['CA'])
-    b = tessellate(a).vertices
-    c = [[a[x]['res'] for x in y] for y in b]
-    d = simplex_potential(c)
+
 #	[print(x['resseq'],x['res'],y) for x,y in zip(a,residue_potential(a, b, d))]
 
