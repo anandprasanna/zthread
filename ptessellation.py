@@ -8,6 +8,7 @@ from scipy.spatial import Delaunay
 from sets import Set
 from pdb_parser import parse_pdb_file, download_pdb_file, open_pdb_file
 import math
+from scipy.sparse import bsr_matrix
 def filter_target(atoms, name='all', span='all', chain='all',altloc='A'):
     """ Filters a protein structure based on given information.
 
@@ -74,7 +75,16 @@ def make_matricies(pdbid,chainid):#makes topology matrix for every ittem in each
     simplexlist =  makelist[1]
     for index, set in enumerate(proxlist):
         if(set != None):
-            matrixlist[index] = convset(set,simplexlist)
+            densestore =convset(set,simplexlist)
+            #dicttester = {}
+
+            #temp = bsr_matrix(densestore[0])
+
+
+            #matrixlist[index] = [removezeroes(densestore[0]),removezeroes(densestore[1]),removezeroes(densestore[2]),removezeroes(densestore[3])]
+
+
+            matrixlist[index] = (convset(set,simplexlist))
     return (matrixlist,makelist[2],makelist[0][1])
 
 
@@ -107,7 +117,7 @@ def neighborlist(reslist,simplexlist):#returns list of neighbors(in set form for
     for item in reslist:
         tempfrst = getshells(item[0],simplexlist)
         hydroscoreprotdict[item[0]] = get_hydrophobicity_score(tempfrst,simplexlist,reslistdict )
-        globallist[item[0]] = (addsecshell(tempfrst,simplexlist))
+        globallist[item[0]] = tempfrst(addsecshell(tempfrst,simplexlist))
     return (globallist,hydroscoreprotdict)
 
 def addsecshell(shell1,simplexlist):#adds second shell thorugh update
@@ -182,3 +192,11 @@ def get_hydrophobicity_score(firstshell,simplexlist,res2name):
     for index in firstshellresidues:
         score += hydrodict[res2name[index]]
     return score
+"""
+def removezeroes(matrix2d):
+    for rindex in xrange(len(matrix2d)):
+         matrix2d[rindex] = [p for p in matrix2d[rindex] if p != 0]
+         matrix2d[rindex]  = [p for p in matrix2d[rindex] if p != []]
+    return matrix2d
+"""
+
